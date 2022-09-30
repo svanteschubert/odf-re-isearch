@@ -74,7 +74,7 @@ public class CollabTextDocument implements Closeable {
   private int appliedChangesCount = 0;
 
   /** Creates an empty ODF document. */
-  private CollabTextDocument() {}
+  protected CollabTextDocument() {}
 
   // to be ... depending to the target the owner document might be also the StylesDom
   public OdfFileDom getOwnerDocument() throws SAXException, IOException {

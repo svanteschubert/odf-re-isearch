@@ -1,101 +1,37 @@
-# The ODF Toolkit
+# ODF Re-ISearch
 
-Visit our latest documentation on [GitHub](https://tdf.github.io/odftoolkit/docs/).
+## Purpose
 
-[The ODF Toolkit](http://odftoolkit.org) is a set of Java modules that allow programmatic
-creation, scanning and manipulation of Open Document Format (ISO/IEC 26300 == ODF)
-documents. Unlike other approaches which rely on runtime manipulation of heavy-weight
-editors via an automation interface, the ODF Toolkit is lightweight and ideal for
-server use.
+Based on [ODFDOM of the ODF Toolkit](https://github.com/tdf/odftoolkit/tree/master/odfdom) the ODFDOM JAR was altered to an extractor of relevant data for [Re-ISearch](https://github.com/re-Isearch/re-Isearch) lead by Edward Zimmermann.
 
-The ODF Toolkit consists of four subcomponents:
+## Build
 
-1. ODFDOM (odfdom-java-*.jar)
-    This is an Open Document Format (ODF) framework. Its purpose is to provide
-    an easy, common way to create, access and manipulate ODF files, without
-    requiring detailed knowledge of the ODF specification. It is designed to
-    provide the ODF developer community with an easy, lightweight programming API
-    portable to any object-oriented language.
+Build the ODFDOM module with `mvn clean install`
 
-2. Simple API (deprecated) - (simple-odf-*.jar)
-    The Simple Java API for ODF is an easy-to-use, high-level Java API
-    for creating, modifying and extracting data from ODF 1.2 documents.
-    It is written in pure Java and does not require that you install any
-    document editor on your system. The Simple Java API for ODF is a high
-    level abstraction of the lower-level ODFDOM API
+## Usage
 
-3. ODF Validator (odfvalidator-*.war)
-    This is a tool that validates Open Document Format (ODF) files and checks them
-    for conformance according to the ODF Standard. ODF Validator is available as an
-    online service and as a command line tool. This page primarily describes the
-    command line tool. Please visit the [ODF Validator documentation](https://tdf.github.io/odftoolkit/conformance/ODFValidator.html) for details.
+### Test the JAR by command line without parameter
 
-4. ODF XSLT Runner(xslt-runner-*.jar, xslt-runner-task-*.jar)
-    ODF XSLT Runner is a small Java application that allows you to apply XSLT
-    stylesheets to XML streams included in ODF packages without extracting them
-    from the package. It can be used from the command line. A driver to use it
-    within an Ant build file, ODF XSLT Runner Task, is also available.
+`java -jar odfdom/target/odfdom-search-1.0.0-jar-with-dependencies.jar`
 
-People interested should follow the [mail list](https://tdf.github.io/odftoolkit/mailing-lists.html) to track progress.
+will return something like:
 
-## Getting Started
+```
+Re-ISearch ODF extractor (build 2022-09-30T23:10:18)
+from https://github.com/svanteschubert/odf-re-isearch supporting ODF 1.2
+```
 
-The ODF Toolkit is based on Java (tested with JDK 11) and uses the Maven 3 <http://maven.apache.org/>
-build system. To build ODF Toolkit, use the following command in this directory:
+### Run the JAR by command line with an ODT as parameter
 
-    mvn clean install
+`java -jar odfdom/target/odfdom-search-1.0.0-jar-with-dependencies.jar <ODT_PATH>`
 
-## Recent Releases
+For example by using as ODT the URL to the OASIS ODF 1.3 specification
+<https://docs.oasis-open.org/office/OpenDocument/v1.3/os/part3-schema/OpenDocument-v1.3-os-part3-schema.odt>
+will return all relevant search data to standard out.
+Piped into a file the data will be usable by the [re-ISearch engine](https://github.com/re-Isearch/re-Isearch/blob/master/docs/re-Isearch-Handbook.pdf).
 
-1. We have a *release 0.10.0* using >=JDK 11 and providing the [new collaboration API](https://tdf.github.io/odftoolkit/odfdom/operations/operations.html):
-    *RELEASE (0.10.0)*:
-    (*Note*: the release branch was earlier called 1.0.0-BETA, but it lacks JDK module API, therefore 1.0.0 was renamed 0.10.0)
-    * [ODFDOM](https://repo1.maven.org/maven2/org/odftoolkit/odfdom-java/0.10.0/)
-    * [ODF Validator](https://repo1.maven.org/maven2/org/odftoolkit/odfvalidator/0.10.0/)
-    * [XSLT Runner](https://repo1.maven.org/maven2/org/odftoolkit/xslt-runner/0.10.0/)
+## Support
 
-2. We have a *release 0.9.0* using JDK 8 and for the final time including the Simple API:
+This project was funded through the NGI0 Discovery Fund, a fund established by NLnet with financial support from the European Commission's Next Generation Internet programme, under the aegis of DG Communications Networks, Content and Technology under grant agreement No 825322.
 
-    *RELEASE (0.9.0)*:
-    * [ODFDOM](https://repo1.maven.org/maven2/org/odftoolkit/odfdom-java/0.9.0/)
-    * [ODF Validator](https://repo1.maven.org/maven2/org/odftoolkit/odfvalidator/0.9.0/)
-    * [XSLT Runner](https://repo1.maven.org/maven2/org/odftoolkit/xslt-runner/0.9.0/)
-    * [Simple API (deprecated)](https://repo1.maven.org/maven2/org/odftoolkit/simple-odf/0.9.0/)
-
-For more details see the [release notes](https://tdf.github.io/odftoolkit/ReleaseNotes.html).
-
-## Documentation
-
-* [The Home Page for the ODF Toolkit](https://tdf.github.io/odftoolkit)
-* [ODFDOM Getting Start Guide](https://tdf.github.io/odftoolkit/odfdom/index.html)
-* [Simple API (deprecated) - Getting Start Guide](https://tdf.github.io/odftoolkit/simple/gettingstartguide.html)
-* [Simple API (deprecated) - Cookbook](https://tdf.github.io/odftoolkit/simple/document/cookbook/index.html)
-* [Simple API (deprecated) - Demos](https://tdf.github.io/odftoolkit/simple/demo/index.html)
-* [Simple API (deprecated) - Online JavaDoc](https://tdf.github.io/odftoolkit/simple/document/javadoc/index.html)
-* [ODF Validator Getting Start Guide](https://tdf.github.io/odftoolkit/conformance/ODFValidator.html)
-* [ODF XSLT Runner Getting Start Guide](https://tdf.github.io/odftoolkit/xsltrunner/ODFXSLTRunner.html)
-
-## Mailing Lists
-
-Discussion about ODF Toolkit takes place on the following mailing lists:
-
-* Development and Users Mailing List
-  * Subscribe: dev+subscribe@odftoolkit.org
-  * Post (after subscription): dev@odftoolkit.org
-  * Unsubscribe: dev+unsubscribe@odftoolkit.org
-  * [Mail archives](https://listarchives.odftoolkit.org/dev/)
-
-The mailing lists are open to anyone and publicly archived.
-
-## Issue Tracker
-
-If you encounter errors in ODF Toolkit or want to suggest an improvement or
-a new feature, please visit the [ODF Toolkit issue tracker](https://github.com/tdf/odftoolkit/issues). There you can also find the
-latest information on known issues and recent bug fixes and enhancements.
-
-## License
-
-The ODF Toolkit includes a number of subcomponents with separate copyright
-notices and license terms. Your use of these subcomponents is subject to
-the terms and conditions of the licenses listed in the [LICENSE](LICENSE) file.
-Copyright ownership information can be found in [NOTICE](NOTICE).
+<IMG SRC="https://nlnet.nl/image/logo_nlnet.svg" ALT="NLnet Foundation" height=100> <IMG SRC="https://nlnet.nl/logo/NGI/NGIZero-green.hex.svg" ALT="NGI0 Search" height=100> &nbsp; &nbsp; <IMG SRC="https://ngi.eu/wp-content/uploads/sites/77/2017/10/bandiera_stelle.png" ALT="EU" height=100>

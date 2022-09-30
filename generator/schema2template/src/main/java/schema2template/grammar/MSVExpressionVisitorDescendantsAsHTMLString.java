@@ -383,7 +383,7 @@ public class MSVExpressionVisitorDescendantsAsHTMLString extends ExpressionWalke
       if ((nc instanceof SimpleNameClass)) {
         elementName = ((SimpleNameClass) nc).localName;
         // the feature below works only with the namespace-prefix2 branch on MSV
-        elementPrefix = ((SimpleNameClass) nc).prefix;
+//        elementPrefix = ((SimpleNameClass) nc).prefix;
         if (elementPrefix != null && !elementPrefix.isEmpty()) {
           elementName = elementPrefix.concat(":").concat(elementName);
         }

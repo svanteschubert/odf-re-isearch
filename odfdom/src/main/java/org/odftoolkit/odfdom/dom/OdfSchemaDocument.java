@@ -190,7 +190,7 @@ public abstract class OdfSchemaDocument extends OdfPackageDocument {
 
     JSONObject ops = null;
     JsonOperationProducer queue = getJsonOperationQueue();
-    if (queue == null) {
+    if (queue == null || mContentDom == null) {
       try {
         this.getStylesDom();
         this.getContentDom();
@@ -239,7 +239,7 @@ public abstract class OdfSchemaDocument extends OdfPackageDocument {
    * <p>The DOM of the content.xml will be created if not done before.
    *
    * @param masterStyleName the name of the master style
-   * @param localName the local name of the header or footer XML element
+   * @param pageArea the area requested for the page (header, body, footer) combined with default, even or first page
    * @return the header or footer element belonging to the given master page style
    */
   public OdfElement getRootComponentElement(
