@@ -34,7 +34,7 @@ Piped into a file the data will be usable by the [re-ISearch engine](https://git
 
 ### Installing Re-ISearch using new ODT Plugin (for Linux)
  
- 1. There is a helpful [installation help file](https://github.com/re-Isearch/re-Isearch/blob/master/INSTALLATION) for [Re-ISearch engine](https://github.com/re-Isearch/re-Isearch).
+ 1. There is a helpful [INSTALLATION help file](https://github.com/re-Isearch/re-Isearch/blob/master/INSTALLATION) for [Re-ISearch engine](https://github.com/re-Isearch/re-Isearch).
  2. It is suggested to add manual the directory for the plugin, which is assumed by default and make it write accessible: /opt/nonmonotonic/ib/lib/plugins/
  3. The script <RE_ISEARCH_ROOT>/bin/odt-search has yet no executable rights and still needs to be added to the $PATH to be able to be found by ISearch
  4. In the <RE_ISEARCH_ROOT>/build directory build the search-engine (for complication look [INSTALLATION cheat file](https://github.com/re-Isearch/re-Isearch/blob/master/INSTALLATION) or [full handbook](https://github.com/re-Isearch/re-Isearch/blob/master/docs/re-Isearch-Handbook.pdf), e.g.
