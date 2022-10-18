@@ -53,7 +53,7 @@ Piped into a file the data will be usable by the [re-ISearch engine](https://git
 ```
 ../bin/Iutil -d <INDEX_DIRECTORY> -vf
 ```
- 8. Finally, any **search can be executed**, for example
+ 8. Finally, any **search can be executed**, for example returning all sentences containing the <SEARCH_STRING>
 ```
 ../bin/Isearch -d <INDEX_DIRECTORY> -P PAGE\PARAGRAPH\SENTENCE <SEARCH_STRING>
 ```
