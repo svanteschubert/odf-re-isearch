@@ -45,9 +45,9 @@ Piped into a file the data will be usable by the [re-ISearch engine](https://git
  ```
  make plugins -j4
  ```
- 6. As the plugin is new is not being taken by default and be chosen explicitly for **indexing** via:
+ 6. As the plugin is new is not being taken by default and be chosen explicitly for **indexing**, e.g. via:
 ```
-../bin/Iindex -d <INDEX_DIRECTORY> -recursive -t odt2: -include "*.odt"  <PATH_TO_ODT_DIRECTORY_OR_FILES>
+../bin/Iindex -d <INDEX_DIRECTORY> -recursive -t odt2: -include "*.odt"  <ODT_DIR_PATH>
 ```
  7. The validness of the new index and the **index structure can be checked** via 
 ```
