@@ -55,15 +55,11 @@ Piped into a file the data will be usable by the [re-ISearch engine](https://git
 ```
  8. Finally, any **search can be executed**, for example returning all sentences containing the <SEARCH_STRING>
 ```
-../bin/Isearch -d <INDEX_DIRECTORY> -P PAGE\PARAGRAPH\SENTENCE <SEARCH_STRING>
+../bin/Isearch -show -d <INDEX_DIRECTORY> -P PAGE\PARAGRAPH\SENTENCE <SEARCH_STRING>
 ```
-## Known Issues of Re-ISearch 
+## Known Issue(s) of Re-ISearch 
 
-* The ./bin/odt-search script has no executable rights in GitHub (and have to be manually being added)
-* The ./bin/odt-search script has to be add explicitly to the user's PATH variable
-* The content of the complete file is returned and not for instance a sentence for -P PAGE\PARAGRAPH\SENTENCE
-
-
+* The ./bin/odt-search script has to be add explicitly to the user's PATH variable (and there is still an error message if you do)
 
 ## Support
 
