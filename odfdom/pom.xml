@@ -28,7 +28,7 @@
     </parent>
 
     <artifactId>odfdom-search</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -166,7 +166,7 @@
                                     org.odftoolkit.odfdom;version="${osgi.import.range}",
                                     org.odftoolkit.odfdom.*;version="${osgi.import.range}",
                                     *
-                                </Import-Package>
+</Import-Package>
                             </instructions>
                         </configuration>
                     </execution>
@@ -346,7 +346,7 @@
         portable to any object-oriented language.
 
         The current reference implementation is written in Java.
-    </description>
+</description>
     <url>https://odftoolkit.org/odfdom/</url>
     <inceptionYear>2008</inceptionYear>
 
@@ -451,7 +451,7 @@
                                         <generation>
                                             <!-- DOM LAYER (ODF Schema DOM) - typed Java Dom Class Generation -->
                                             <grammarVersion>1.2</grammarVersion>
-                                            <grammarID>odf-schema</grammarID><!-- same grammarID with different versions -->
+                                            <grammarID>odf-schema</grammarID> <!-- same grammarID with different versions -->
                                             <grammarPath>${basedir}/../generator/schema2template/src/test/resources/test-input/odf/grammar/OpenDocument-v1.2-os-schema.rng</grammarPath>
                                             <grammarAdditionsPath>${basedir}/../generator/schema2template/src/test/resources/test-input/odf/generation/odfdom-java/dom/grammar-additions.xml</grammarAdditionsPath>
                                             <mainTemplatePath>${basedir}/../generator/schema2template/src/test/resources/test-input/odf/generation/odfdom-java/dom/template/file-creation-list_odf-schema.vm</mainTemplatePath>

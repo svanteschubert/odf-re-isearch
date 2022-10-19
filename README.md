@@ -6,7 +6,7 @@ Based on [ODFDOM of the ODF Toolkit](https://github.com/tdf/odftoolkit/tree/mast
 
 ## Build
 
-Build the ODFDOM module via `mvn clean install` using [Maven](https://maven.apache.org/download.cgi) and JDK >=9 (JDK 8 build still shows problems with dependencies).
+Build the ODFDOM module via `mvn clean install` using [Maven](https://maven.apache.org/download.cgi) and JDK >=9 (JDK 8 build still shows problems with dependencies). Sucessfully tested with JDK LTS 11 and 17.
 (You may also [compile of Java into a binary using GraalVM](https://www.graalvm.org/reference-manual/native-image/) on Linux.
 This was successfully tested for Linux without any visible performance gain nor loss).
 
@@ -33,10 +33,10 @@ will return all relevant search data to standard out.
 Piped into a file the data will be usable by the [re-ISearch engine](https://github.com/re-Isearch/re-Isearch/blob/master/docs/re-Isearch-Handbook.pdf).
 
 ### Installing Re-ISearch for ODT (using this JAR as bundled Plugin) for Linux
- 
+
  The search engine Re-ISearch is bundling the deliverable of this repository as a plugin to extract search information from OpenDocument Test documents.
  Here is a description how to install Re-ISearch on your Linux machine and use this ODT plugin to search within ODT documents.
-  
+
  1. You need to copy the Re-Isearch sources via
  ```
  git clone https://github.com/re-Isearch/re-Isearch
@@ -57,7 +57,7 @@ There is a helpful [INSTALLATION help file](https://github.com/re-Isearch/re-Ise
 ```
 ../bin/Iindex -d <INDEX_DIRECTORY> -recursive -t odt2: -include "*.odt"  <ODT_DIR_INPUT_PATH>
 ```
- 7. The validness of the new index and the **index structure can be checked** via 
+ 7. The validness of the new index and the **index structure can be checked** via
 ```
 ../bin/Iutil -d <INDEX_DIRECTORY> -vf
 ```
@@ -65,7 +65,7 @@ There is a helpful [INSTALLATION help file](https://github.com/re-Isearch/re-Ise
 ```
 ../bin/Isearch -show -d <INDEX_DIRECTORY> -P PAGE\PARAGRAPH\SENTENCE <SEARCH_STRING>
 ```
-## Known Issue(s) of Re-ISearch 
+## Known Issue(s) of Re-ISearch
 
 * The ./bin/odt-search script has to be add explicitly to the user's PATH variable (and there is still an error message if you do)
 
