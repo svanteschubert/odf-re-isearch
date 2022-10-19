@@ -6,7 +6,7 @@ Based on [ODFDOM of the ODF Toolkit](https://github.com/tdf/odftoolkit/tree/mast
 
 ## Build
 
-Build the ODFDOM module via `mvn clean install` using [Maven](https://maven.apache.org/download.cgi) and JDK >9 (JDK 8 build still shows problems with dependencies).
+Build the ODFDOM module via `mvn clean install` using [Maven](https://maven.apache.org/download.cgi) and JDK >=9 (JDK 8 build still shows problems with dependencies).
 (You may also [compile of Java into a binary using GraalVM](https://www.graalvm.org/reference-manual/native-image/) on Linux.
 This was successfully tested for Linux without any visible performance gain nor loss).
 
@@ -45,7 +45,7 @@ Piped into a file the data will be usable by the [re-ISearch engine](https://git
  ```
  make plugins -j4
  ```
- 6. As the plugin is new is not being taken by default and be chosen explicitly for **indexing**, e.g. via:
+ 6. As the plugin is new and not being taken by default yet - choose it explicitly for **indexing** via:
 ```
 ../bin/Iindex -d <INDEX_DIRECTORY> -recursive -t odt2: -include "*.odt"  <ODT_DIR_PATH>
 ```
