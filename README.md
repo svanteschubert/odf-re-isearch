@@ -32,13 +32,21 @@ For example by using as ODT the URL to the OASIS ODF 1.3 specification
 will return all relevant search data to standard out.
 Piped into a file the data will be usable by the [re-ISearch engine](https://github.com/re-Isearch/re-Isearch/blob/master/docs/re-Isearch-Handbook.pdf).
 
-### Installing Re-ISearch using new ODT Plugin (for Linux)
+### Installing Re-ISearch for ODT (using this JAR as bundled Plugin) for Linux
  
- 1. There is a helpful [INSTALLATION help file](https://github.com/re-Isearch/re-Isearch/blob/master/INSTALLATION) for [Re-ISearch engine](https://github.com/re-Isearch/re-Isearch).
+ The search engine Re-ISearch is bundling the deliverable of this repository as a plugin to extract search information from OpenDocument Test documents.
+ Here is a description how to install Re-ISearch on your Linux machine and use this ODT plugin to search within ODT documents.
+  
+ 1. You need to copy the Re-Isearch sources via
+ ```
+ git clone https://github.com/re-Isearch/re-Isearch
+ ```
+There is a helpful [INSTALLATION help file](https://github.com/re-Isearch/re-Isearch/blob/master/INSTALLATION) for [Re-ISearch engine](https://github.com/re-Isearch/re-Isearch).
  2. It is suggested to add manual the directory for the plugin, which is assumed by default and make it write accessible: /opt/nonmonotonic/ib/lib/plugins/
  3. The script <RE_ISEARCH_ROOT>/bin/odt-search still needs to be added to the $PATH to be able to be found by ISearch (known usability issue)
  4. In the <RE_ISEARCH_ROOT>/build directory build the search-engine (for complication look [INSTALLATION cheat file](https://github.com/re-Isearch/re-Isearch/blob/master/INSTALLATION) or [full handbook](https://github.com/re-Isearch/re-Isearch/blob/master/docs/re-Isearch-Handbook.pdf), e.g.
  ```
+ cd re-Isearch/build
  make -j4
  ```
  5. In the <RE_ISEARCH_ROOT>/build directory build the plugins:
@@ -47,7 +55,7 @@ Piped into a file the data will be usable by the [re-ISearch engine](https://git
  ```
  6. As the plugin is new and not being taken by default yet - choose it explicitly for **indexing** via:
 ```
-../bin/Iindex -d <INDEX_DIRECTORY> -recursive -t odt2: -include "*.odt"  <ODT_DIR_PATH>
+../bin/Iindex -d <INDEX_DIRECTORY> -recursive -t odt2: -include "*.odt"  <ODT_DIR_INPUT_PATH>
 ```
  7. The validness of the new index and the **index structure can be checked** via 
 ```
