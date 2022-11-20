@@ -154,7 +154,7 @@ public class JsonOperationConsumer {
     }
   }
 
-  public static int applyOperations(CollabTextDocument opsDoc, JSONArray ops) throws Exception {
+  public static int applyOperations(CollabDocument opsDoc, JSONArray ops) throws Exception {
     LOG.log(Level.FINEST, "*************** INCOMING OPERATIONS **********\n{0}", ops);
     int acceptedOpCount = 0;
     final OdfDocument doc = opsDoc.getDocument();
@@ -3411,7 +3411,7 @@ public class JsonOperationConsumer {
       JSONArray start,
       JSONObject attrs,
       String type,
-      CollabTextDocument opsDoc)
+      CollabDocument opsDoc)
       throws IndexOutOfBoundsException, JSONException {
     // Parent will not change and have to exist to insert the new component
     final Component parentComponent = rootComponent.getParentOf(start);

@@ -23,20 +23,21 @@
  */
 package org.odftoolkit.odfdom.search;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.junit.Assert;
-import org.junit.Test;
-import org.odftoolkit.odfdom.changes.JsonOperationNormalizer;
-import org.odftoolkit.odfdom.utils.ResourceUtilities;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.junit.Assert;
+import org.junit.Test;
+import org.odftoolkit.odfdom.changes.JsonOperationNormalizer;
+import org.odftoolkit.odfdom.utils.ResourceUtilities;
 
-public class SearchTextDocumentTest {
+public class SearchOdfDocumentTest {
 
-  private static final String SOURCE_ODF_1_3 = "odf1.3.odt";
+  // private static final String SOURCE_ODF_1_3 = "odf1.3.odt";
+  private static final String SOURCE_ODF_1_3 = "MergedCells.ods";
   private static final String TARGET_TEXT_ODF_1_3 = "odf1.3.txt";
   private static final String TARGET_JSON_ODF_1_3 = "odf1.3.json";
 
@@ -44,19 +45,19 @@ public class SearchTextDocumentTest {
   private static final String TARGET_TEXT_RE_ISEARCH = "re-isearch-test.txt";
   private static final String TARGET_JSON_RE_ISEARCH = "re-isearch-test.json";
 
-  public SearchTextDocumentTest() {
-  }
+  public SearchOdfDocumentTest() {}
 
   @Test
   public void testSaveText() {
     saveToText(SOURCE_ODF_1_3, TARGET_TEXT_ODF_1_3);
-    saveToText(SOURCE_RE_ISEARCH, TARGET_TEXT_RE_ISEARCH);
+    //    saveToText(SOURCE_RE_ISEARCH, TARGET_TEXT_RE_ISEARCH);
   }
 
   private void saveToText(String input, String output) {
 
-    try (SearchTextDocument doc1 = new SearchTextDocument(
-        Files.newInputStream(Path.of(ResourceUtilities.getTestInputURI(input))))) {
+    try (SearchOdfDocument doc1 =
+        new SearchOdfDocument(
+            Files.newInputStream(Path.of(ResourceUtilities.getTestInputURI(input))))) {
 
       String searchText = doc1.getTextRespresentation();
       System.out.println(searchText);
@@ -65,7 +66,7 @@ public class SearchTextDocumentTest {
         out.println(searchText);
       }
     } catch (Exception e) {
-      Logger.getLogger(SearchTextDocumentTest.class.getName())
+      Logger.getLogger(SearchOdfDocumentTest.class.getName())
           .log(Level.SEVERE, e.getMessage() + ExceptionUtils.getStackTrace(e), e);
       Assert.fail(e.getMessage());
     }
@@ -79,18 +80,20 @@ public class SearchTextDocumentTest {
 
   public void saveToJsonOperations(String input, String output) {
 
-    try (SearchTextDocument doc1 = new SearchTextDocument(
-        Files.newInputStream(Path.of(ResourceUtilities.getTestInputURI(input))))) {
+    try (SearchOdfDocument doc1 =
+        new SearchOdfDocument(
+            Files.newInputStream(Path.of(ResourceUtilities.getTestInputURI(input))))) {
 
-      String opsText = JsonOperationNormalizer.asString(doc1.getDocumentAsChanges())
-          .replace(",{\"name\"", ",\n{\"name\"");
+      String opsText =
+          JsonOperationNormalizer.asString(doc1.getDocumentAsChanges())
+              .replace(",{\"name\"", ",\n{\"name\"");
       System.out.println(opsText);
 
       try (PrintWriter out = new PrintWriter(ResourceUtilities.getTestOutputFile(output))) {
         out.println(opsText);
       }
     } catch (Exception e) {
-      Logger.getLogger(SearchTextDocumentTest.class.getName())
+      Logger.getLogger(SearchOdfDocumentTest.class.getName())
           .log(Level.SEVERE, e.getMessage() + ExceptionUtils.getStackTrace(e), e);
       Assert.fail(e.getMessage());
     }

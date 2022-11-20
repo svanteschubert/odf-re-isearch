@@ -27,18 +27,12 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.odftoolkit.odfdom.changes.CollabTextDocument;
-import org.odftoolkit.odfdom.changes.JsonOperationNormalizer;
-import org.odftoolkit.odfdom.dom.element.meta.MetaDocumentStatisticElement;
-import org.odftoolkit.odfdom.search.SearchTextDocument;
+import org.odftoolkit.odfdom.search.SearchOdfDocument;
 
 /**
  * Provides metadata about the ODFDOM library as build date, version number. Its main() method is
@@ -112,29 +106,29 @@ public class JarManifest {
   public static void main(String[] args) throws IOException, Exception {
     if (args == null || args.length == 0) {
       System.out.println(
-          //getOdfdomTitle()
-              "Re-ISearch ODF extractor"
+          // getOdfdomTitle()
+          "Re-ISearch ODF extractor"
               + " (build "
               + getOdfdomBuildDate()
               + ')'
               + "\nfrom "
-              //+ getOdfdomWebsite()
+              // + getOdfdomWebsite()
               + "https://github.com/svanteschubert/odf-re-isearch"
               + " supporting ODF "
               + getOdfdomSupportedOdfVersion());
     } else {
-      if (args[0].endsWith(".odt")) {
+      if (args[0].endsWith(".odt") || args[0].endsWith(".ods")) {
         // support of absolute file paths
-        try (SearchTextDocument doc1 =
-              new SearchTextDocument(Files.newInputStream(Paths.get(args[0])))) {
-              System.out.println(doc1.getTextRespresentation());
+        try (SearchOdfDocument doc1 =
+            new SearchOdfDocument(Files.newInputStream(Paths.get(args[0])))) {
+          System.out.println(doc1.getTextRespresentation());
         } catch (FileNotFoundException e) {
           // support of relative file paths adding the current user directory ahead
-          try (SearchTextDocument doc2 =
-              new SearchTextDocument(
+          try (SearchOdfDocument doc2 =
+              new SearchOdfDocument(
                   Files.newInputStream(
                       Paths.get(System.getProperty("user.dir") + File.separator + args[0])))) {
-              System.out.println(doc2.getTextRespresentation());
+            System.out.println(doc2.getTextRespresentation());
           }
         }
       } else {

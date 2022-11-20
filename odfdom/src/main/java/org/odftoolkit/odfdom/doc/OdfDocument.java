@@ -89,7 +89,7 @@ public abstract class OdfDocument extends OdfSchemaDocument {
   private Calendar mCreationDate;
   private static final String FORMER_OPEN_OFFICE_VERSION =
       "StarOffice/8$Win32 OpenOffice.org_project/680m18$Build-9161";
-  protected Boolean mHasCollaboration = null;
+  protected Boolean mHasCollaboration = Boolean.TRUE;
 
   // Using static factory instead of constructor
   protected OdfDocument(OdfPackage pkg, String internalPath, OdfMediaType mediaType)

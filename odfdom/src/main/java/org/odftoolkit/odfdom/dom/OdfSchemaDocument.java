@@ -44,7 +44,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.ResourceUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.odftoolkit.odfdom.changes.CollabTextDocument;
+import org.odftoolkit.odfdom.changes.CollabDocument;
 import org.odftoolkit.odfdom.changes.Component;
 import org.odftoolkit.odfdom.changes.JsonOperationProducer;
 import org.odftoolkit.odfdom.changes.PageArea;
@@ -185,7 +185,7 @@ public abstract class OdfSchemaDocument extends OdfPackageDocument {
     mJsonOperationQueue = queue;
   }
 
-  public JSONObject getOperations(CollabTextDocument operationDoc)
+  public JSONObject getOperations(CollabDocument operationDoc)
       throws SAXException, JSONException, IOException {
 
     JSONObject ops = null;
@@ -239,7 +239,8 @@ public abstract class OdfSchemaDocument extends OdfPackageDocument {
    * <p>The DOM of the content.xml will be created if not done before.
    *
    * @param masterStyleName the name of the master style
-   * @param pageArea the area requested for the page (header, body, footer) combined with default, even or first page
+   * @param pageArea the area requested for the page (header, body, footer) combined with default,
+   *     even or first page
    * @return the header or footer element belonging to the given master page style
    */
   public OdfElement getRootComponentElement(
@@ -337,7 +338,7 @@ public abstract class OdfSchemaDocument extends OdfPackageDocument {
 
   /**
    * For instance, header and footer have their own component trees aside the main document.
-   * Therefore in a text document may exist three root components.
+   * Therefore in an ODF document may exist three root components.
    */
   public void setRootComponent(Component rootComponent) {
     mRootComponent = rootComponent;

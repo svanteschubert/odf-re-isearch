@@ -544,6 +544,10 @@ public class ChangesFileSaxHandler extends org.odftoolkit.odfdom.pkg.OdfFileSaxH
       throws SAXException {
     flushTextAtStart(uri, localName, qName);
 
+    if (localName.equals("table")) {
+      System.out.println("YEAH!!");
+    }
+
     // if there is a specilized handler on the stack, dispatch the event
     OdfElement element = null;
     // ToDo: Should be able to create operations without creating the DOM Tree
@@ -2937,151 +2941,9 @@ public class ChangesFileSaxHandler extends org.odftoolkit.odfdom.pkg.OdfFileSaxH
    *
    * <p>There are three pointer (variables), that are updated during parsing the spreadsheet:
    * mCurrentCellNo is the actual column number mFirstContentCellNo is mFirstEqualCellNo is set to
-   * the first cell to be written, after a cell was written out or an empty precessor
+   * the first cell to be written, after a cell was written out or an empty prec essor
    *
    * <p>ToDo: Refactoring - As soon every component got its own parser, the tableOps. have to be
-   * replaced by the Context of the component
-   *
-   * <p>private CachedTable evaluateSimilarCells(CachedTable tableOps, CachedInnerTableOperation
-   * cellOperation, JSONObject currentCell, boolean isRow) { // An Operation will always be
-   * triggered in the end of the function boolean triggerOperation = false;
-   *
-   * <p>// every repeatedColumns row will result into a fillRange operation int
-   * previousContentRepetition = 1;
-   *
-   * <p>// if the previous cells are equal if (tableOps.mFirstEqualCellNo > -1) {
-   * previousContentRepetition = tableOps.mCurrentColumnNo - tableOps.mFirstEqualCellNo; }
-   *
-   * <p>boolean isRepeatedRow = tableOps.mLastRow != null &&
-   * !tableOps.mFirstRow.equals(tableOps.mLastRow);
-   *
-   * <p>// do not trigger the operation if the spreadsheetRow is null and its only member is null if
-   * (tableOps.mSheetNo == null && cellOperation != null && cellOperation.mStart != null) { // we
-   * have a cell position and require the two above (first parent row, afterwards cell) => already
-   * -2 // and an additional - 1 as size of 1 would result in zero position ==> finally -3
-   * tableOps.mSheetNo = cellOperation.mStart.get(cellOperation.mStart.size() - 3); } // ** There
-   * are four variations for previous/current cell we have to check: // 1) Current Content Cell,
-   * Previous Content empty if (currentCell != null && tableOps.mPreviousCell != null) { // if the
-   * two cells are NOT the same if (!currentCell.equals(tableOps.mPreviousCell)) { if
-   * (previousContentRepetition > MIN_REPEATING_CONTENT_CELLS) { triggerOperation = true; } else {
-   * if (tableOps.mCurrentRange == null) { tableOps.mCurrentRange = new JSONArray(); } // Resolving
-   * mColumnRepetition, explicitly adding cells to the range for (int i = 0;
-   * tableOps.mCurrentColumnNo - tableOps.mFirstEqualCellNo > i; i++) {
-   * tableOps.mCurrentRange.put(tableOps.mPreviousCell); } // if the row is being repeated, there
-   * are always vertical spans (fill same content multiple times if (tableOps.mLastRow -
-   * tableOps.mFirstRow > 0) { triggerOperation = true; } // there is an upcoming fill operation,
-   * the previous content has to be flushed if (tableOps.getCellRepetition() >
-   * MIN_REPEATING_CONTENT_CELLS) { triggerOperation = true; } tableOps.mFirstEqualCellNo =
-   * tableOps.mCurrentColumnNo; } } // 2) Current Content Cell, Previous Empty Cell (never have
-   * saved anything) } else if (currentCell != null && tableOps.mPreviousCell == null) { // &&
-   * tableOps.mCurrentRange == null tableOps.mFirstEqualCellNo = tableOps.mCurrentColumnNo; if
-   * (tableOps.mFirstContentCellNo == -1) { // reset the empty cell counter - if previous was empty
-   * tableOps.mFirstContentCellNo = tableOps.mCurrentColumnNo; tableOps.mEmptyCellCount = 0; } else
-   * { if (tableOps.getCellRepetition() > MIN_REPEATING_CONTENT_CELLS) { triggerOperation = true; }
-   * else { if (tableOps.mCurrentRange == null) { tableOps.mCurrentRange = new JSONArray(); } for
-   * (int i = 0; tableOps.mEmptyCellCount > i; i++) { tableOps.mCurrentRange.put(JSONObject.NULL); }
-   * tableOps.mEmptyCellCount = 0; } } // 3) Content Cell empty, Previo Cell full } else if
-   * (currentCell == null && tableOps.mPreviousCell != null) { tableOps.mEmptyCellCount +=
-   * tableOps.getCellRepetition(); // as there had been previously content // check if it was
-   * repeating content if (previousContentRepetition > MIN_REPEATING_CONTENT_CELLS) {
-   * triggerOperation = true; } else { if (tableOps.mCurrentRange == null) { tableOps.mCurrentRange
-   * = new JSONArray(); } // save the previous cell for later compressed output for (int i = 0;
-   * tableOps.mCurrentColumnNo - tableOps.mFirstEqualCellNo > i; i++) {
-   * tableOps.mCurrentRange.put(tableOps.mPreviousCell); } // if the row is being repeated, there
-   * are always vertical spans (fill same content multiple times if (tableOps.mLastRow -
-   * tableOps.mFirstRow > 0) { triggerOperation = true; } } tableOps.mFirstEqualCellNo = -1; // if
-   * there was previously repeating content cells // 4) Both are null } else if (currentCell == null
-   * && tableOps.mPreviousCell == null & !isRow) { // note that an empty cell was passed
-   * tableOps.mEmptyCellCount += tableOps.getCellRepetition(); // if this is the first empty cell if
-   * (tableOps.mFirstEmptyCell == -1) { // remember when it started tableOps.mFirstEmptyCell =
-   * tableOps.mCurrentColumnNo;
-   *
-   * <p>// else check if the maximum repeated empty cells was reached and existing content has to be
-   * dispatched as an operation } else if (tableOps.mFirstContentCellNo != -1 &&
-   * MAX_REPEATING_EMPTY_CELLS > tableOps.mEmptyCellCount) { triggerOperation = true; } }
-   *
-   * <p>// RANGE CREATION: for every row we flush previous content OR if we want to flush for other
-   * reasons if (isRow && tableOps.mFirstContentCellNo > -1 || triggerOperation) { // WRITING
-   * WHITESPACE TO ROW // if the last cell used content, but there was previous whitespace, the
-   * whitespace has to be explicitly set if (tableOps.mEmptyCellCount > 0 && currentCell != null) {
-   * for (int i = 0; tableOps.mEmptyCellCount > i; i++) { if (tableOps.mCurrentRange == null) {
-   * tableOps.mCurrentRange = new JSONArray(); } tableOps.mCurrentRange.put(JSONObject.NULL); }
-   * tableOps.mEmptyCellCount = 0; } // WRITING CELL TO ROW // if content to flush exist and the
-   * operation was triggered // OR there is horizontal repeated content // OR there is vertical
-   * repeated content if (tableOps.mCurrentRange != null || previousContentRepetition >
-   * MIN_REPEATING_CONTENT_CELLS || isRepeatedRow) { if(tableOps.mCurrentRange != null &&
-   * !tableOps.mCurrentRange.isEmpty()) { Component rootComponent = mSchemaDoc.getRootComponent();
-   * TableTableElement sheet = (TableTableElement)rootComponent.getChildNode(tableOps.mSheetNo); }
-   *
-   * <p>mJsonOperationProducer.addRange(tableOps.mSheetNo, tableOps.mFirstRow, tableOps.mLastRow,
-   * tableOps.mPreviousRepeatedRows, tableOps.mFirstContentCellNo, previousContentRepetition,
-   * tableOps.mPreviousCell, tableOps.mCurrentRange, previousContentRepetition >
-   * MIN_REPEATING_CONTENT_CELLS); } // if a fill sufficent repeating is now after a content, the
-   * previous content was flushed if (tableOps.mFirstEqualCellNo == tableOps.mCurrentColumnNo) { //
-   * but still a content and repeating content exits tableOps.mFirstContentCellNo =
-   * tableOps.mFirstEqualCellNo; } else { if (currentCell != null) { tableOps.mFirstContentCellNo =
-   * tableOps.mCurrentColumnNo; tableOps.mFirstEqualCellNo = tableOps.mCurrentColumnNo; } else {
-   * tableOps.mFirstContentCellNo = -1; tableOps.mFirstEqualCellNo = -1; } } tableOps.mCurrentRange
-   * = null; } if (!isRow) { // Making the current cell the previous for next round
-   * tableOps.mPreviousCell = currentCell; tableOps.mCurrentColumnNo +=
-   * tableOps.getCellRepetition(); tableOps.setCellRepetition(1); } else { // after the end of a row
-   * reset all values tableOps.mSheetNo = null; tableOps.mCurrentRange = null;
-   * tableOps.mPreviousCell = null; tableOps.mFirstContentCellNo = -1; tableOps.mFirstEqualCellNo =
-   * -1; tableOps.mCurrentColumnNo = 0; tableOps.mEmptyCellCount = 0; tableOps.mFirstEmptyCell = -1;
-   * tableOps.setCellRepetition(1); } return tableOps; }
-   *
-   * <p>static void stashColumnWidths(TableTableElement tableElement) {
-   * List<TableTableColumnElement> existingColumnList = getTableColumnElements(tableElement, new
-   * LinkedList<TableTableColumnElement>()); List<Integer> tableColumWidths =
-   * OdfFileSaxHandler.collectColumnWidths(tableElement, existingColumnList);
-   * tableElement.pushTableGrid(tableColumWidths); }
-   *
-   * <p>static List<Integer> collectColumnWidths(TableTableElement tableElement,
-   * List<TableTableColumnElement> columns) { boolean hasRelColumnWidth = false; boolean
-   * hasAbsColumnWidth = false; boolean hasColumnWithoutWidth = false; List<Integer> columnRelWidths
-   * = new ArrayList(); for (TableTableColumnElement column : columns) { if
-   * (column.hasAttributeNS(OdfDocumentNamespace.TABLE.getUri(), "style-name")) { Length tableWidth
-   * = getPropertyLength(StyleTablePropertiesElement.Width, tableElement);
-   *
-   * <p>int repeatedColumns = 1; if (column.hasAttributeNS(OdfDocumentNamespace.TABLE.getUri(),
-   * "number-columns-repeated")) { repeatedColumns =
-   * Integer.parseInt(column.getAttributeNS(OdfDocumentNamespace.TABLE.getUri(),
-   * "number-columns-repeated")); }
-   *
-   * <p>String columnRelWidth = getProperty(StyleTableColumnPropertiesElement.RelColumnWidth,
-   * column);
-   *
-   * <p>// it is being assumed, when the columnRelWidth is once set, it is always set if
-   * (columnRelWidth != null && !columnRelWidth.isEmpty()) { hasRelColumnWidth = true; if
-   * (hasAbsColumnWidth) { LOG.warning("******* BEWARE: Absolute and relative width are not supposed
-   * to be mixed!! ***********"); } columnRelWidth = columnRelWidth.substring(0,
-   * columnRelWidth.indexOf('*')); Integer relWidth = Integer.parseInt(columnRelWidth); for (int i =
-   * 0; i < repeatedColumns; i++) { columnRelWidths.add(relWidth); } } else { // if there is no
-   * relative column width if (hasRelColumnWidth) { LOG.warning("******* BEWARE: Absolute and
-   * relative width are not supposed to be mixed!! ***********"); }
-   *
-   * <p>Length columnWidth = getPropertyLength(StyleTableColumnPropertiesElement.ColumnWidth,
-   * column); // there can be only table width and .. if (tableWidth != null) { // columnwidth, with
-   * a single one missing if (columnWidth != null) { hasAbsColumnWidth = true; int widthFactor =
-   * (int) Math.round((columnWidth.getMillimeters() * 100) / tableWidth.getMillimeters()); for (int
-   * i = 0; i < repeatedColumns; i++) { columnRelWidths.add(widthFactor); } } else { if
-   * (hasColumnWithoutWidth) { LOG.warning("******* BEWARE: Two columns without width and no column
-   * width are not expected!! ***********"); } hasColumnWithoutWidth = true; } // if the table is
-   * not set, it will always be unset.. } else { if (columnWidth != null) { hasAbsColumnWidth =
-   * true; int widthFactor = (int) Math.round((columnWidth.getMicrometer() * 10)); for (int i = 0; i
-   * < repeatedColumns; i++) { columnRelWidths.add(widthFactor); } } else { LOG.warning("*******
-   * BEWARE: Two columns without width and no column width are not expected!! ***********"); } } } }
-   * } return columnRelWidths; } /* Returns all TableTableColumn descendants that exist within the
-   * tableElement, even within groups, columns and header elements
-   *
-   * <p>static List<TableTableColumnElement> getTableColumnElements(Element parent, List columns) {
-   * NodeList children = parent.getChildNodes(); for (int i = 0; i < children.getLength(); i++) {
-   * Node child = children.item(i); if (child instanceof Element) { if (child instanceof
-   * TableTableColumnElement) { columns.add(child); } else if (child instanceof
-   * TableTableColumnGroupElement || child instanceof TableTableHeaderColumnsElement || child
-   * instanceof TableTableColumnsElement) { columns = getTableColumnElements((Element) child,
-   * columns); } else if (child instanceof TableTableRowGroupElement || child instanceof
-   * TableTableHeaderRowsElement || child instanceof TableTableRowElement || child instanceof
-   * TableTableRowsElement) { break; } } } return columns; }
+   * replaced by the Context of the component *
    */
 }

@@ -37,7 +37,7 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.odftoolkit.odfdom.doc.OdfTextDocument;
+import org.odftoolkit.odfdom.doc.OdfDocument;
 import org.odftoolkit.odfdom.dom.OdfSchemaDocument.OdfXMLFile;
 import org.odftoolkit.odfdom.pkg.OdfFileDom;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
@@ -46,10 +46,10 @@ import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 /** This collaboration document embraces an ODF document ad */
-public class CollabTextDocument extends CollabDocument implements Closeable {
+public class CollabDocument implements Closeable {
 
-  private static final Logger LOG = LoggerFactory.getLogger(CollabTextDocument.class);
-  //	private static final Logger LOG = Logger.getLogger(CollabTextDocument.class.getName());
+  private static final Logger LOG = LoggerFactory.getLogger(CollabDocument.class);
+  //	private static final Logger LOG = Logger.getLogger(CollabDocument.class.getName());
   // not private as used as well by tests
   static final String OPERATION_REVISON_FILE = "debug/revision.txt";
   static final String OPERATION_TEXT_FILE_PREFIX = "debug/operationUpdates_";
@@ -62,7 +62,7 @@ public class CollabTextDocument extends CollabDocument implements Closeable {
   private static final String OPERATION_DEBUG_OUTPUT_FILE =
       System.getProperty("java.io.tmpdir") + File.separatorChar + "odf-operations.txt";
 
-  private OdfTextDocument mTextDocument;
+  private OdfDocument mDocument;
   private OdfPackage mPackage;
   private Map<Long, byte[]> mResourceMap;
   private boolean mSaveDebugOperations;
@@ -74,7 +74,7 @@ public class CollabTextDocument extends CollabDocument implements Closeable {
   private int appliedChangesCount = 0;
 
   /** Creates an empty ODF document. */
-  protected CollabTextDocument() {}
+  protected CollabDocument() {}
 
   // to be ... depending to the target the owner document might be also the StylesDom
   public OdfFileDom getOwnerDocument() throws SAXException, IOException {
@@ -83,52 +83,41 @@ public class CollabTextDocument extends CollabDocument implements Closeable {
   }
 
   /**
-   * Creates a new ODT document from the default template
-   *
-   * @return new CollabTextDocument
-   */
-  public static CollabTextDocument newTextCollabDocument() throws Exception {
-    CollabTextDocument odt = new CollabTextDocument();
-    odt.mTextDocument = OdfTextDocument.newTextDocument(Boolean.TRUE);
-    return odt;
-  }
-
-  /**
-   * Creates an CollabTextDocument from the OpenDocument provided by a resource Stream.
+   * Creates an CollabDocument from the OpenDocument provided by a resource Stream.
    *
    * <p>Since an InputStream does not provide the arbitrary (non sequential) read access needed by
-   * CollabTextDocument, the InputStream is cached. This usually takes more time compared to the
-   * other createInternalDocument methods. An advantage of caching is that there are no problems
+   * CollabDocument, the InputStream is cached. This usually takes more time compared to the other
+   * createInternalDocument methods. An advantage of caching is that there are no problems
    * overwriting an input file.
    *
    * @param inputStream - the InputStream of the ODF text document.
    */
-  public CollabTextDocument(InputStream inputStream) throws Exception {
-    mTextDocument = OdfTextDocument.loadDocument(inputStream, Boolean.TRUE);
+  public CollabDocument(InputStream inputStream) throws Exception {
+    mDocument = OdfDocument.loadDocument(inputStream, Boolean.TRUE);
   }
 
   /**
-   * Creates an CollabTextDocument from the OpenDocument provided by a resource Stream.
+   * Creates an CollabDocument from the OpenDocument provided by a resource Stream.
    *
    * <p>Since an InputStream does not provide the arbitrary (non sequential) read access needed by
-   * CollabTextDocument, the InputStream is cached. This usually takes more time compared to the
-   * other createInternalDocument methods. An advantage of caching is that there are no problems
+   * CollabDocument, the InputStream is cached. This usually takes more time compared to the other
+   * createInternalDocument methods. An advantage of caching is that there are no problems
    * overwriting an input file.
    *
    * @param configuration - key/value pairs of user given run-time settings (configuration)
    * @param documentStream - the InputStream of the ODF text document.
    */
-  public CollabTextDocument(InputStream documentStream, Map<String, Object> configuration)
+  public CollabDocument(InputStream documentStream, Map<String, Object> configuration)
       throws Exception {
     this(documentStream, null, configuration);
   }
 
   /**
-   * Creates an CollabTextDocument from the OpenDocument provided by a resource Stream.
+   * Creates an CollabDocument from the OpenDocument provided by a resource Stream.
    *
    * <p>Since an InputStream does not provide the arbitrary (non sequential) read access needed by
-   * CollabTextDocument, the InputStream is cached. This usually takes more time compared to the
-   * other createInternalDocument methods. An advantage of caching is that there are no problems
+   * CollabDocument, the InputStream is cached. This usually takes more time compared to the other
+   * createInternalDocument methods. An advantage of caching is that there are no problems
    * overwriting an input file.
    *
    * @param inputStream - the InputStream of the ODF text document.
@@ -136,10 +125,10 @@ public class CollabTextDocument extends CollabDocument implements Closeable {
    * @param configuration - key/value pairs of user given run-time settings (configuration)
    * @throws java.lang.Exception document could not be opened
    */
-  public CollabTextDocument(
+  public CollabDocument(
       InputStream inputStream, Map<Long, byte[]> resourceManager, Map<String, Object> configuration)
       throws Exception {
-    mTextDocument = OdfTextDocument.loadDocument(inputStream, configuration, Boolean.TRUE);
+    mDocument = OdfDocument.loadDocument(inputStream, configuration, Boolean.TRUE);
     mPackage = getDocument().getPackage();
     mResourceMap = resourceManager;
     if (configuration != null) {
@@ -168,7 +157,7 @@ public class CollabTextDocument extends CollabDocument implements Closeable {
    */
   public JSONObject getDocumentAsChanges() throws SAXException, JSONException, IOException {
 
-    JSONObject ops = mTextDocument.getOperations(this);
+    JSONObject ops = mDocument.getOperations(this);
     if (ops != null && ops.length() > 0) {
       LOG.debug("\n\n*** ALL OPERATIONS:\n{0}", ops.toString());
     } else {
@@ -215,7 +204,7 @@ public class CollabTextDocument extends CollabDocument implements Closeable {
       // remove the cached view
       removeCachedView();
       if (!isMetadataUpdated) {
-        mTextDocument.updateMetaData();
+        mDocument.updateMetaData();
         isMetadataUpdated = true;
       }
     }
@@ -239,7 +228,7 @@ public class CollabTextDocument extends CollabDocument implements Closeable {
   }
 
   private void addOriginalOdfAsDebug() throws SAXException {
-    OdfPackage pkg = mTextDocument.getPackage();
+    OdfPackage pkg = mDocument.getPackage();
     // if there is not already an orignal file being stored
     if (!pkg.contains(ORIGNAL_ODT_FILE)) {
       LOG.debug("Adding original ODT document as debug within the zip at " + ORIGNAL_ODT_FILE);
@@ -299,7 +288,7 @@ public class CollabTextDocument extends CollabDocument implements Closeable {
     // serialize the operations as String (using ascii characters only) and indent a line for every
     // new operations (heuristic: every array item will be split into new line)
     try {
-      OdfPackage pkg = mTextDocument.getPackage();
+      OdfPackage pkg = mDocument.getPackage();
       // start with zero to always increment (either read a default by file or new)
       int revisionNo = 0;
       // if there was already a revision, get it..
@@ -333,8 +322,8 @@ public class CollabTextDocument extends CollabDocument implements Closeable {
 
   public long getContentSize() {
     if (mPackage == null) {
-      if (mTextDocument != null) {
-        mPackage = mTextDocument.getPackage();
+      if (mDocument != null) {
+        mPackage = mDocument.getPackage();
       }
     }
     if (mPackage != null) {
@@ -345,12 +334,12 @@ public class CollabTextDocument extends CollabDocument implements Closeable {
   }
 
   /**
-   * Returns the OdfTextDocument encapsulating the DOM view
+   * Returns the OdfDocument encapsulating the DOM view
    *
    * @return ODF document - currently only Te
    */
-  public OdfTextDocument getDocument() {
-    return mTextDocument;
+  public OdfDocument getDocument() {
+    return mDocument;
   }
 
   /**
@@ -359,8 +348,8 @@ public class CollabTextDocument extends CollabDocument implements Closeable {
    * @return ODF Package
    */
   public OdfPackage getPackage() {
-    if (mPackage == null && mTextDocument != null) {
-      mPackage = mTextDocument.getPackage();
+    if (mPackage == null && mDocument != null) {
+      mPackage = mDocument.getPackage();
     }
     return mPackage;
   }
@@ -372,7 +361,7 @@ public class CollabTextDocument extends CollabDocument implements Closeable {
    */
   @Override
   public void close() {
-    mTextDocument.close();
+    mDocument.close();
   }
 
   void setAppliedChangesCount(int opCount) {

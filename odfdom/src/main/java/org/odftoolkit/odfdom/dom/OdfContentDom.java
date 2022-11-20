@@ -31,7 +31,6 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 import org.odftoolkit.odfdom.changes.ChangesFileSaxHandler;
 import org.odftoolkit.odfdom.doc.OdfDocument;
-import org.odftoolkit.odfdom.doc.OdfTextDocument;
 import org.odftoolkit.odfdom.dom.element.office.OfficeAutomaticStylesElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeBodyElement;
 import org.odftoolkit.odfdom.dom.element.office.OfficeDocumentContentElement;
@@ -70,8 +69,7 @@ public class OdfContentDom extends OdfFileDom {
       mPrefixByUri.put(name.getUri(), name.getPrefix());
     }
     try {
-      if (mPackageDocument instanceof OdfTextDocument
-          && ((OdfDocument) mPackageDocument).hasCollaboration()) {
+      if (((OdfDocument) mPackageDocument).hasCollaboration()) {
         super.initialize(new ChangesFileSaxHandler(this), this);
       } else {
         super.initialize(new OdfFileSaxHandler(this), this);
@@ -154,17 +152,18 @@ public class OdfContentDom extends OdfFileDom {
 
       Node parent = getFirstChild();
 
-      /* from the ODF 1.2 schema
-          <define name="office-document-content">
-              <element name="office:document-content">
-                  <ref name="office-document-common-attrs"/>
-                  <ref name="office-scripts"/>
-                  <ref name="office-font-face-decls"/>
-                  <ref name="office-automatic-styles"/>
-                  <ref name="office-body"/>
-              </element>
-          </define>
-      */
+      /*
+       * from the ODF 1.2 schema
+       * <define name="office-document-content">
+       * <element name="office:document-content">
+       * <ref name="office-document-common-attrs"/>
+       * <ref name="office-scripts"/>
+       * <ref name="office-font-face-decls"/>
+       * <ref name="office-automatic-styles"/>
+       * <ref name="office-body"/>
+       * </element>
+       * </define>
+       */
       // try to insert before body element
       OdfElement sibling = OdfElement.findFirstChildNode(OfficeBodyElement.class, parent);
       if (sibling == null) {

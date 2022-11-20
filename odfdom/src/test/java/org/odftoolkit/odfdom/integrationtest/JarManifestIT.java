@@ -109,9 +109,12 @@ public class JarManifestIT {
       LOG.log(Level.INFO, "\"{0}\"", firstOutputLine);
       LOG.log(Level.INFO, "\"{0}\"", secondOutputLine);
       Assert.assertEquals(
-         "Re-ISearch ODF extractor" +
-           // JarManifest.getOdfdomTitle() +
-            " (build " + JarManifest.getOdfdomBuildDate() + ')',
+          "Re-ISearch ODF extractor"
+              +
+              // JarManifest.getOdfdomTitle() +
+              " (build "
+              + JarManifest.getOdfdomBuildDate()
+              + ')',
           firstOutputLine);
       Assert.assertEquals(
           "from "

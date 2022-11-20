@@ -20,10 +20,8 @@ import static org.odftoolkit.odfdom.changes.OperationConstants.*; // The names o
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -36,39 +34,10 @@ import org.json.JSONObject;
 import org.odftoolkit.odfdom.changes.JsonOperationProducer;
 import org.odftoolkit.odfdom.changes.MapHelper;
 import org.odftoolkit.odfdom.changes.PageArea;
-import org.odftoolkit.odfdom.doc.OdfDocument;
-import org.odftoolkit.odfdom.dom.OdfDocumentNamespace;
-import org.odftoolkit.odfdom.dom.OdfSchemaDocument;
 import org.odftoolkit.odfdom.dom.OdfStylesDom;
-import org.odftoolkit.odfdom.dom.element.OdfStylableElement;
-import org.odftoolkit.odfdom.dom.element.OdfStyleBase;
-import org.odftoolkit.odfdom.dom.element.office.OfficeMasterStylesElement;
-import org.odftoolkit.odfdom.dom.element.style.StyleListLevelLabelAlignmentElement;
-import org.odftoolkit.odfdom.dom.element.style.StyleListLevelPropertiesElement;
-import org.odftoolkit.odfdom.dom.element.style.StyleMasterPageElement;
-import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleBulletElement;
-import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleElementBase;
-import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleImageElement;
-import org.odftoolkit.odfdom.dom.element.text.TextListLevelStyleNumberElement;
-import org.odftoolkit.odfdom.dom.element.text.TextListStyleElement;
-import org.odftoolkit.odfdom.dom.element.text.TextParagraphElementBase;
-import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
-import org.odftoolkit.odfdom.dom.style.props.OdfStylePropertiesSet;
-import org.odftoolkit.odfdom.dom.style.props.OdfStyleProperty;
-import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeAutomaticStyles;
-import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
-import org.odftoolkit.odfdom.incubator.doc.style.OdfDefaultStyle;
-import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
-import org.odftoolkit.odfdom.incubator.doc.style.OdfStylePageLayout;
 import org.odftoolkit.odfdom.pkg.OdfElement;
 import org.odftoolkit.odfdom.pkg.OdfFileDom;
 import org.odftoolkit.odfdom.pkg.OdfPackage;
-import org.odftoolkit.odfdom.type.Length;
-import org.w3c.dom.Attr;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 // changes
 
@@ -106,7 +75,7 @@ public class TextProducer extends JsonOperationProducer {
    */
   boolean mIsTableExceededStyleAdded = false;
 
-  /** Collecting the text for the search text file*/
+  /** Collecting the text for the search text file */
   StringBuilder mSB;
 
   boolean isNewParagraph = false;
@@ -116,7 +85,6 @@ public class TextProducer extends JsonOperationProducer {
     this();
     mSB = sb;
   }
-
 
   public TextProducer() {
     try {
@@ -155,9 +123,9 @@ public class TextProducer extends JsonOperationProducer {
     // ToDo: Moving styleId into para list -
     // final Map<String, Object> args,
 
-    if(componentType.equals("Paragraph")){
+    if (componentType.equals("Paragraph")) {
       isNewParagraph = true;
-    }else if(componentType.equals("Header")){
+    } else if (componentType.equals("Header")) {
       isNewHeader = true;
     }
 
@@ -487,14 +455,13 @@ public class TextProducer extends JsonOperationProducer {
    * @param start: an array that contains the position, where the new text shall be inserted.
    */
   public void addText(final List<Integer> start, final String text, final String context) {
-      super.addText(start, text, context);
+    super.addText(start, text, context);
 
-
-    if(isNewParagraph || isNewHeader){
+    if (isNewParagraph || isNewHeader) {
       mSB.append("\n\n").append(text);
       isNewHeader = false;
       isNewParagraph = false;
-    }else{
+    } else {
       mSB.append(text);
     }
   }
@@ -974,7 +941,6 @@ public class TextProducer extends JsonOperationProducer {
     }
   }
 
-
   public void addDocumentProperties(
       OdfStylesDom stylesDom, Integer defaultTabStopWidth, JSONObject defaultPageStyles) {
     try {
@@ -994,7 +960,7 @@ public class TextProducer extends JsonOperationProducer {
     }
   }
 
-    /** Adding a default footer style operation */
+  /** Adding a default footer style operation */
   public void addHeaderFooter(String contextName, PageArea pageArea, JSONObject attrs) {
     if (contextName != null) {
       final JSONObject newOperation = new JSONObject(4);
